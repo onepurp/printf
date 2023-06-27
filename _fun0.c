@@ -1,27 +1,37 @@
 #include <unistd.h>
-#include <stdlib.h>
 #include <stdarg.h>
-
-/**
- * _putchar: #
- *
- * @c: #
- *
- * Return: #
- */
 
 int _putchar(char c)
 {
 	return write(1, &c, 1);
 }
 
-/**
- * _printf: #
- *
- * format: #
- *
- * Return: pc
- */
+int print_integer(int n)
+{
+	int ra9m = 0;
+
+	if (n == 0)
+	{
+		_putchar('0');
+		return 1;
+	}
+
+	if (n < 0)
+	{
+		n = -n;
+		_putchar('-');
+		ra9m++;
+	}
+
+	while (n > 0) {
+		int digit = n % 10;
+		_putchar('0' + digit);
+		n /= 10;
+		ra9m++;
+	}
+
+	return ra9m;
+}
 
 int _printf(const char *format, ...)
 {
@@ -31,35 +41,39 @@ int _printf(const char *format, ...)
 
 	va_start(ag, format);
 
-	no9ta = format;
-
-	while (*no9ta != '\0') {
-		if (*no9ta == '%') {
+	for (no9ta = format; *no9ta != '\0'; no9ta++)
+	{
+		if (*no9ta == '%')
+		{
 			no9ta++;
 
-			if (*no9ta == '%') {
+			if (*no9ta == '%')
+			{
 				pc += _putchar('%');
-			} else if (*no9ta == 'c') {
+			} else if (*no9ta == 'c')
+			{
 				int c = va_arg(ag, int);
 				pc += _putchar(c);
-			} else if (*no9ta == 's') {
+			} else if (*no9ta == 's')
+			{
 				char *str = va_arg(ag, char*);
 				if (str == NULL)
 					str = "(null)";
 
+				while (*str != '\0')
 				{
-					int i = 0;
-					while (str[i] != '\0') {
-						pc += _putchar(str[i]);
-						i++;
-					}
+					pc += _putchar(*str);
+					str++;
 				}
+			} else if (*no9ta == 'd' || *no9ta == 'i')
+			{
+				int n = va_arg(ag, int);
+				pc += print_integer(n);
 			}
-		} else {
+		} else
+		{
 			pc += _putchar(*no9ta);
 		}
-
-		no9ta++;
 	}
 
 	va_end(ag);
